@@ -1,0 +1,56 @@
+from typing import List
+
+class Solution:
+    def findAnagrams(self, s: str, p: str) -> List[int]:
+        n, m = len(s), len(p)
+        if m > n: 
+            return []
+
+        # frequency arrays for 'a'..'z'
+        need = [0] * 26
+        have = [0] * 26
+        for ch in p:
+            need[ord(ch) - 97] += 1
+
+        res = []
+        matches = 0
+        # initialize the first window
+        for i in range(m):
+            idx = ord(s[i]) - 97
+            have[idx] += 1
+
+        # count initial matches (positions where have[c] == need[c])
+        for c in range(26):
+            if have[c] == need[c]:
+                matches += 1
+
+        if matches == 26:
+            res.append(0)
+
+        # slide the window over s
+        for i in range(m, n):
+            add_idx = ord(s[i]) - 97
+            drop_idx = ord(s[i - m]) - 97
+
+            # add new char (right side)
+            before = have[add_idx]
+            have[add_idx] += 1
+            if have[add_idx] == need[add_idx]:
+                matches += 1
+            elif before == need[add_idx]:
+                # we just exceeded the needed count
+                matches -= 1
+
+            # remove old char (left side)
+            before = have[drop_idx]
+            have[drop_idx] -= 1
+            if have[drop_idx] == need[drop_idx]:
+                matches += 1
+            elif before == need[drop_idx]:
+                # we just fell below the needed count
+                matches -= 1
+
+            if matches == 26:
+                res.append(i - m + 1)
+
+        return res
