@@ -13,13 +13,11 @@ class Solution:
         if not head or not head.next or not head.next.next:
             return
 
-        # 1) Find middle (slow ends at mid for odd length, left-mid for even)
         slow, fast = head, head
         while fast and fast.next:
             slow = slow.next
             fast = fast.next.next
 
-        # 2) Reverse second half starting at slow.next
         second = slow.next
         slow.next = None  # detach first half to avoid cycles
 
@@ -31,7 +29,6 @@ class Solution:
             second = nxt
         second = prev  # head of reversed half
 
-        # 3) Merge two halves: head and reversed second
         first = head
         while second:
             t1, t2 = first.next, second.next
