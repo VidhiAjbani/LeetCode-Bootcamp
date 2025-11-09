@@ -1,0 +1,18 @@
+from collections import Counter
+from typing import List
+
+class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        freq = Counter(nums)                  # O(n)
+        buckets = [[] for _ in range(len(nums) + 1)]
+        for num, f in freq.items():           # <= O(n) unique
+            buckets[f].append(num)
+
+        ans = []
+        # Walk buckets from high freq to low and collect k items
+        for f in range(len(nums), 0, -1):     # O(n)
+            if buckets[f]:
+                ans.extend(buckets[f])
+                if len(ans) >= k:
+                    return ans[:k]
+        return ans[:k]
